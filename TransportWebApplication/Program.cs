@@ -1,4 +1,12 @@
+using TransportWebApplication;
+using Microsoft.EntityFrameworkCore;
+using TransportWebApplication.Models;
+
 var builder = WebApplication.CreateBuilder(args);
+
+builder.Services.AddDbContext<TransportContext> (option => option.UseSqlServer(
+    builder.Configuration.GetConnectionString("DefaultConnection")
+    ));
 
 // Add services to the container.
 builder.Services.AddControllersWithViews();
@@ -22,6 +30,6 @@ app.UseAuthorization();
 
 app.MapControllerRoute(
     name: "default",
-    pattern: "{controller=Home}/{action=Index}/{id?}");
+    pattern: "{controller=Models}/{action=Index}/{id?}");
 
 app.Run();

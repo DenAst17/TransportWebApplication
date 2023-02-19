@@ -1,0 +1,53 @@
+﻿@model IEnumerable<TransportWebApplication.Models.Auto>
+
+@{
+    ViewData["Title"] = "Авто за моделлю";
+}
+
+<h1>Авто за моделлю @ViewBag.ModelName</h1>
+
+<p>
+    @Html.ActionLink("Додати нове авто", "Create", new {modelId = ViewBag.ModelId})
+</p>
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.Color)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Vin)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.RegisterCode)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Model)
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+@foreach (var item in Model) {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.Color)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Vin)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.RegisterCode)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Model.Name)
+            </td>
+            <td>
+                <a asp-action="Edit" asp-route-id="@item.Id">Edit</a> |
+                <a asp-action="Details" asp-route-id="@item.Id">Details</a> |
+                <a asp-action="Delete" asp-route-id="@item.Id">Delete</a>
+            </td>
+        </tr>
+}
+    </tbody>
+</table>

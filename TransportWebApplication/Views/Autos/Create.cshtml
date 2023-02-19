@@ -1,0 +1,46 @@
+﻿@model TransportWebApplication.Models.Auto
+
+@{
+    ViewData["Title"] = "Create";
+}
+
+<h1>Додавання авто моделі @ViewBag.ModelName</h1>
+
+<h4>Auto</h4>
+<hr />
+<div class="row">
+    <div class="col-md-4">
+        <form asp-action="Create">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <div class="form-group">
+                <label asp-for="Color" class="control-label"></label>
+                <input asp-for="Color" class="form-control" />
+                <span asp-validation-for="Color" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Vin" class="control-label"></label>
+                <input asp-for="Vin" class="form-control" />
+                <span asp-validation-for="Vin" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="RegisterCode" class="control-label"></label>
+                <input asp-for="RegisterCode" class="form-control" />
+                <span asp-validation-for="RegisterCode" class="text-danger"></span>
+            </div>
+
+            <input type="hidden" value="@ViewBag.ModelId" name="ModelId" />
+
+            <div class="form-group">
+                <input type="submit" value="Create" class="btn btn-primary" />
+            </div>
+        </form>
+    </div>
+</div>
+
+<div>
+    <a asp-action="Index">Back to List</a>
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}
