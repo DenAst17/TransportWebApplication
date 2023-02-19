@@ -3,6 +3,8 @@ using Microsoft.EntityFrameworkCore;
 using TransportWebApplication.Models;
 
 var builder = WebApplication.CreateBuilder(args);
+builder.Logging.ClearProviders();
+builder.Logging.AddConsole();
 
 builder.Services.AddDbContext<TransportContext> (option => option.UseSqlServer(
     builder.Configuration.GetConnectionString("DefaultConnection")

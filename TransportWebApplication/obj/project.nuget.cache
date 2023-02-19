@@ -1,8 +1,8 @@
 {
   "version": 2,
-  "dgSpecHash": "BHut93KllKRwI5mqLlAVgGytXOIlNcSDKyGbMuLLj/C3+XsceGdKpOspt+htP9lTXuHkqtDP1EaPqik++FY1mQ==",
+  "dgSpecHash": "zt++mpmwBdJy6M4X8LOIyIo5R+6QqDvc7B/7laPSemZ9o9K03vW1Zldw/s8uYqvXLa9T89mQXHuk2Un3uLXthw==",
   "success": true,
-  "projectFilePath": "C:\\Users\\Denis\\Desktop\\Main\\University\\ООП - ІСТП\\Semester 4\\Lab 1 ISTP\\Astafiev\\TransportWebApplication\\TransportWebApplication\\TransportWebApplication.csproj",
+  "projectFilePath": "C:\\Users\\Denis\\Desktop\\Main\\University\\OOP - ISTP\\Semester 4\\Lab 1 ISTP\\Astafiev\\TransportWebApplication\\TransportWebApplication\\TransportWebApplication.csproj",
   "expectedPackageFiles": [
     "C:\\Users\\Denis\\.nuget\\packages\\azure.core\\1.24.0\\azure.core.1.24.0.nupkg.sha512",
     "C:\\Users\\Denis\\.nuget\\packages\\azure.identity\\1.6.0\\azure.identity.1.6.0.nupkg.sha512",

@@ -25,7 +25,6 @@ namespace TransportWebApplication.Controllers
             {
                 return RedirectToAction("Index", "Models");
             }
-
             ViewBag.ModelId = id; // Just storing data to use it on view
             ViewBag.ModelName = name;
 
@@ -59,6 +58,9 @@ namespace TransportWebApplication.Controllers
             //ViewData["ModelId"] = new SelectList(_context.Models, "Id", "Name");
             ViewBag.ModelId = modelId;
             ViewBag.ModelName = _context.Models.Where(m => m.Id == modelId).FirstOrDefault().Name;
+            Console.WriteLine("..");
+            Console.WriteLine(ViewBag.ModelName);
+            Console.WriteLine("..");
             return View();
         }
 
@@ -67,22 +69,23 @@ namespace TransportWebApplication.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create(int modelId, [Bind("Id,Color,Vin,RegisterCode")] Auto auto)
+        public async Task<IActionResult> Create(int ModelId, [Bind("Id,Color,Vin,RegisterCode")] Auto auto)
         {
-            auto.ModelId = modelId;
+            auto.ModelId = ModelId;
             if (ModelState.IsValid)
             {
                 _context.Add(auto);
                 await _context.SaveChangesAsync();
-                return RedirectToAction("Index", "Autos", new {id = modelId, name = _context.Autos.Where(a => a.ModelId == modelId).Include(a => a.Model)});
+                return RedirectToAction("Index", "Autos", new { id = ModelId, name = _context.Models.Where(m => m.Id == ModelId).FirstOrDefault().Name });
             }
             //ViewData["ModelId"] = new SelectList(_context.Models, "Id", "Name", auto.ModelId);
             //return View(auto);
-            return RedirectToAction("Index", "Autos", new { id = modelId, name = _context.Autos.Where(a => a.ModelId == modelId).Include(a => a.Model) });
+            return RedirectToAction("Index", "Autos", new { id = ModelId, name = _context.Models.Where(m => m.Id == ModelId).FirstOrDefault().Name });
+
         }
 
-        // GET: Autos/Edit/5
-        public async Task<IActionResult> Edit(long? id)
+            // GET: Autos/Edit/5
+            public async Task<IActionResult> Edit(long? id)
         {
             if (id == null || _context.Autos == null)
             {

@@ -9,94 +9,85 @@ using TransportWebApplication.Models;
 
 namespace TransportWebApplication.Controllers
 {
-    public class ModelsController : Controller
+    public class OwnersController : Controller
     {
         private readonly TransportContext _context;
 
-        public ModelsController(TransportContext context)
+        public OwnersController(TransportContext context)
         {
             _context = context;
         }
 
-        // GET: Models
+        // GET: Owners
         public async Task<IActionResult> Index()
         {
-              return _context.Models != null ? 
-                          View(await _context.Models.ToListAsync()) :
-                          Problem("Entity set 'TransportContext.Models'  is null.");
+              return View(await _context.Owners.ToListAsync());
         }
 
-        // GET: Models/Details/5
+        // GET: Owners/Details/5
         public async Task<IActionResult> Details(long? id)
         {
-            if (id == null || _context.Models == null)
+            if (id == null || _context.Owners == null)
             {
                 return NotFound();
             }
 
-            var model = await _context.Models
+            var owner = await _context.Owners
                 .FirstOrDefaultAsync(m => m.Id == id);
-            if (model == null)
+            if (owner == null)
             {
                 return NotFound();
             }
 
-            //return View(model);
-            Console.WriteLine("?");
-            Console.WriteLine(model.Id);
-            Console.WriteLine("?");
-            Console.WriteLine(model.Name);
-            Console.WriteLine("?");
-
-            return RedirectToAction("Index", "Autos", new { id = model.Id, name = model.Name});
+            return View(owner);
         }
 
-        // GET: Models/Create
+        // GET: Owners/Create
         public IActionResult Create()
         {
             return View();
         }
 
-        // POST: Models/Create
+        // POST: Owners/Create
         // To protect from overposting attacks, enable the specific properties you want to bind to.
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Id,Name")] Model model)
+        public async Task<IActionResult> Create([Bind("Id,Name,Surname")] Owner owner)
         {
             if (ModelState.IsValid)
             {
-                _context.Add(model);
+                _context.Add(owner);
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
-            return View(model);
+            return View(owner);
         }
 
-        // GET: Models/Edit/5
+        // GET: Owners/Edit/5
         public async Task<IActionResult> Edit(long? id)
         {
-            if (id == null || _context.Models == null)
+            if (id == null || _context.Owners == null)
             {
                 return NotFound();
             }
 
-            var model = await _context.Models.FindAsync(id);
-            if (model == null)
+            var owner = await _context.Owners.FindAsync(id);
+            if (owner == null)
             {
                 return NotFound();
             }
-            return View(model);
+            return View(owner);
         }
 
-        // POST: Models/Edit/5
+        // POST: Owners/Edit/5
         // To protect from overposting attacks, enable the specific properties you want to bind to.
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(long id, [Bind("Id,Name")] Model model)
+        public async Task<IActionResult> Edit(long id, [Bind("Id,Name,Surname")] Owner owner)
         {
-            if (id != model.Id)
+            if (id != owner.Id)
             {
                 return NotFound();
             }
@@ -105,12 +96,12 @@ namespace TransportWebApplication.Controllers
             {
                 try
                 {
-                    _context.Update(model);
+                    _context.Update(owner);
                     await _context.SaveChangesAsync();
                 }
                 catch (DbUpdateConcurrencyException)
                 {
-                    if (!ModelExists(model.Id))
+                    if (!OwnerExists(owner.Id))
                     {
                         return NotFound();
                     }
@@ -121,49 +112,49 @@ namespace TransportWebApplication.Controllers
                 }
                 return RedirectToAction(nameof(Index));
             }
-            return View(model);
+            return View(owner);
         }
 
-        // GET: Models/Delete/5
+        // GET: Owners/Delete/5
         public async Task<IActionResult> Delete(long? id)
         {
-            if (id == null || _context.Models == null)
+            if (id == null || _context.Owners == null)
             {
                 return NotFound();
             }
 
-            var model = await _context.Models
+            var owner = await _context.Owners
                 .FirstOrDefaultAsync(m => m.Id == id);
-            if (model == null)
+            if (owner == null)
             {
                 return NotFound();
             }
 
-            return View(model);
+            return View(owner);
         }
 
-        // POST: Models/Delete/5
+        // POST: Owners/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(long id)
         {
-            if (_context.Models == null)
+            if (_context.Owners == null)
             {
-                return Problem("Entity set 'TransportContext.Models'  is null.");
+                return Problem("Entity set 'TransportContext.Owners'  is null.");
             }
-            var model = await _context.Models.FindAsync(id);
-            if (model != null)
+            var owner = await _context.Owners.FindAsync(id);
+            if (owner != null)
             {
-                _context.Models.Remove(model);
+                _context.Owners.Remove(owner);
             }
             
             await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
         }
 
-        private bool ModelExists(long id)
+        private bool OwnerExists(long id)
         {
-          return (_context.Models?.Any(e => e.Id == id)).GetValueOrDefault();
+          return _context.Owners.Any(e => e.Id == id);
         }
     }
 }
