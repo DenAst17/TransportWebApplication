@@ -16,6 +16,26 @@ build_property.GenerateRazorMetadataSourceChecksumAttributes = true
 build_property.MSBuildProjectDirectory = C:\Users\Denis\Desktop\Main\University\OOP - ISTP\Semester 4\Lab 1 ISTP\Astafiev\TransportWebApplication\TransportWebApplication
 build_property._RazorSourceGeneratorDebug = 
 
+[C:/Users/Denis/Desktop/Main/University/OOP - ISTP/Semester 4/Lab 1 ISTP/Astafiev/TransportWebApplication/TransportWebApplication/Views/AutoOwners/Create.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcQXV0b093bmVyc1xDcmVhdGUuY3NodG1s
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/Denis/Desktop/Main/University/OOP - ISTP/Semester 4/Lab 1 ISTP/Astafiev/TransportWebApplication/TransportWebApplication/Views/AutoOwners/Delete.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcQXV0b093bmVyc1xEZWxldGUuY3NodG1s
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/Denis/Desktop/Main/University/OOP - ISTP/Semester 4/Lab 1 ISTP/Astafiev/TransportWebApplication/TransportWebApplication/Views/AutoOwners/Details.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcQXV0b093bmVyc1xEZXRhaWxzLmNzaHRtbA==
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/Denis/Desktop/Main/University/OOP - ISTP/Semester 4/Lab 1 ISTP/Astafiev/TransportWebApplication/TransportWebApplication/Views/AutoOwners/Edit.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcQXV0b093bmVyc1xFZGl0LmNzaHRtbA==
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/Denis/Desktop/Main/University/OOP - ISTP/Semester 4/Lab 1 ISTP/Astafiev/TransportWebApplication/TransportWebApplication/Views/AutoOwners/Index.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcQXV0b093bmVyc1xJbmRleC5jc2h0bWw=
+build_metadata.AdditionalFiles.CssScope = 
+
 [C:/Users/Denis/Desktop/Main/University/OOP - ISTP/Semester 4/Lab 1 ISTP/Astafiev/TransportWebApplication/TransportWebApplication/Views/Autos/Create.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcQXV0b3NcQ3JlYXRlLmNzaHRtbA==
 build_metadata.AdditionalFiles.CssScope = 
