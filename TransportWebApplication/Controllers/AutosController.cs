@@ -42,25 +42,21 @@ namespace TransportWebApplication.Controllers
             }
 
             var auto = await _context.Autos
-                .Include(a => a.Model)
-                .FirstOrDefaultAsync(m => m.Id == id);
+                .FirstOrDefaultAsync(a => a.Id == id);
+
             if (auto == null)
             {
                 return NotFound();
             }
 
-            return View(auto);
+            return RedirectToAction("Index", "AutoOwners", new { autoId = auto.Id, autoName = auto.Vin });
         }
 
         // GET: Autos/Create
         public IActionResult Create(int modelId)
         {
-            //ViewData["ModelId"] = new SelectList(_context.Models, "Id", "Name");
             ViewBag.ModelId = modelId;
             ViewBag.ModelName = _context.Models.Where(m => m.Id == modelId).FirstOrDefault().Name;
-            Console.WriteLine("..");
-            Console.WriteLine(ViewBag.ModelName);
-            Console.WriteLine("..");
             return View();
         }
 
@@ -78,8 +74,6 @@ namespace TransportWebApplication.Controllers
                 await _context.SaveChangesAsync();
                 return RedirectToAction("Index", "Autos", new { id = ModelId, name = _context.Models.Where(m => m.Id == ModelId).FirstOrDefault().Name });
             }
-            //ViewData["ModelId"] = new SelectList(_context.Models, "Id", "Name", auto.ModelId);
-            //return View(auto);
             return RedirectToAction("Index", "Autos", new { id = ModelId, name = _context.Models.Where(m => m.Id == ModelId).FirstOrDefault().Name });
 
         }

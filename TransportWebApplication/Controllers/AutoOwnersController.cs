@@ -26,13 +26,14 @@ namespace TransportWebApplication.Controllers
                 return RedirectToAction("Index", "Models");
             }
             ViewBag.AutoId = autoId; // Just storing data to use it on view
-            ViewBag.ModelName = autoName;
+            ViewBag.AutoName = autoName;
 
-            var autoOwners = _context.AutoOwners.Where(ao => ao.AutoId == autoId).Include(ao => ao.Owner);
-            
-            // var transportContext = _context.AutoOwners.Include(a => a.Auto).Include(a => a.Owner);
+            var autoOwners = _context.AutoOwners
+                .Where(ao => ao.AutoId == autoId)
+                .Include(ao => ao.Owner)
+                .ToList();
 
-            return View(await autoOwners.ToListAsync());
+            return View(autoOwners);
         }
 
         // GET: AutoOwners/Details/5
@@ -56,9 +57,12 @@ namespace TransportWebApplication.Controllers
         }
 
         // GET: AutoOwners/Create
-        public IActionResult Create()
+        public IActionResult Create(int id, string name)
         {
-            ViewData["AutoId"] = new SelectList(_context.Autos, "Id", "Vin");
+            Console.WriteLine(id);
+            Console.WriteLine(name);
+            ViewBag.AutoId = id;
+            ViewBag.AutoName = name;
             ViewData["OwnerId"] = new SelectList(_context.Owners, "Id", "Name");
             return View();
         }
@@ -68,17 +72,16 @@ namespace TransportWebApplication.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Id,AutoId,OwnerId,StartDate,EndDate,IncidentsInfo")] AutoOwner autoOwner)
+        public async Task<IActionResult> Create(int AutoId, [Bind("OwnerId,StartDate,EndDate,IncidentsInfo")] AutoOwner autoOwner)
         {
+            autoOwner.AutoId = AutoId;
             if (ModelState.IsValid)
             {
                 _context.Add(autoOwner);
                 await _context.SaveChangesAsync();
-                return RedirectToAction(nameof(Index));
+                return RedirectToAction("Index", "AutoOwners", new { autoId = AutoId, autoName = _context.Autos.Where(a => a.Id == AutoId).FirstOrDefault().Vin });
             }
-            ViewData["AutoId"] = new SelectList(_context.Autos, "Id", "Id", autoOwner.AutoId);
-            ViewData["OwnerId"] = new SelectList(_context.Owners, "Id", "Id", autoOwner.OwnerId);
-            return View(autoOwner);
+            return RedirectToAction("Index", "AutoOwners", new { autoId = AutoId, autoName = _context.Autos.Where(a => a.Id == AutoId).FirstOrDefault().Vin });
         }
 
         // GET: AutoOwners/Edit/5

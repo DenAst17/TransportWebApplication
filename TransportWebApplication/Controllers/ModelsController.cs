@@ -42,11 +42,6 @@ namespace TransportWebApplication.Controllers
             }
 
             //return View(model);
-            Console.WriteLine("?");
-            Console.WriteLine(model.Id);
-            Console.WriteLine("?");
-            Console.WriteLine(model.Name);
-            Console.WriteLine("?");
 
             return RedirectToAction("Index", "Autos", new { id = model.Id, name = model.Name});
         }

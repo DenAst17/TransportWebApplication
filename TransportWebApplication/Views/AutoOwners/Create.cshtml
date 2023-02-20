@@ -1,23 +1,18 @@
 ﻿@model TransportWebApplication.Models.AutoOwner
 
 @{
-    ViewData["Title"] = "Create";
+    ViewData["Title"] = "Додавання власника до авто";
 }
 
-<h1>Create</h1>
+<h1>Додавання власника до авто з кодом @ViewBag.AutoName</h1>
 
-<h4>AutoOwner</h4>
 <hr />
 <div class="row">
     <div class="col-md-4">
         <form asp-action="Create">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
             <div class="form-group">
-                <label asp-for="AutoId" class="control-label"></label>
-                <select asp-for="AutoId" class ="form-control" asp-items="ViewBag.AutoId"></select>
-            </div>
-            <div class="form-group">
-                <label asp-for="OwnerId" class="control-label"></label>
+                <label asp-for="OwnerId" class="control-label">Owner name</label>
                 <select asp-for="OwnerId" class ="form-control" asp-items="ViewBag.OwnerId"></select>
             </div>
             <div class="form-group">
@@ -35,6 +30,9 @@
                 <input asp-for="IncidentsInfo" class="form-control" />
                 <span asp-validation-for="IncidentsInfo" class="text-danger"></span>
             </div>
+
+            <input type="hidden" value="@ViewBag.AutoId" name="AutoId" />
+
             <div class="form-group">
                 <input type="submit" value="Create" class="btn btn-primary" />
             </div>
