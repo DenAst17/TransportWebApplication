@@ -25,7 +25,7 @@ namespace TransportWebApplication.Controllers
         }
 
         // GET: Owners/Details/5
-        public async Task<IActionResult> Details(long? id)
+        public async Task<IActionResult> Details(long? id, CancellationToken cancellationToken)
         {
             if (id == null || _context.Owners == null)
             {
@@ -33,7 +33,7 @@ namespace TransportWebApplication.Controllers
             }
 
             var owner = await _context.Owners
-                .FirstOrDefaultAsync(m => m.Id == id);
+                .FirstOrDefaultAsync(m => m.Id == id, cancellationToken);
             if (owner == null)
             {
                 return NotFound();
@@ -53,26 +53,26 @@ namespace TransportWebApplication.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Id,Name,Surname")] Owner owner)
+        public async Task<IActionResult> Create([Bind("Id,Name,Surname")] Owner owner, CancellationToken cancellationToken)
         {
             if (ModelState.IsValid)
             {
-                _context.Add(owner);
-                await _context.SaveChangesAsync();
+                await _context.AddAsync(owner, cancellationToken);
+                await _context.SaveChangesAsync(cancellationToken);
                 return RedirectToAction(nameof(Index));
             }
             return View(owner);
         }
 
         // GET: Owners/Edit/5
-        public async Task<IActionResult> Edit(long? id)
+        public async Task<IActionResult> Edit(long? id, CancellationToken cancellationToken)
         {
             if (id == null || _context.Owners == null)
             {
                 return NotFound();
             }
 
-            var owner = await _context.Owners.FindAsync(id);
+            var owner = await _context.Owners.FindAsync(new object[] { id }, cancellationToken);
             if (owner == null)
             {
                 return NotFound();
@@ -85,7 +85,7 @@ namespace TransportWebApplication.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(long id, [Bind("Id,Name,Surname")] Owner owner)
+        public async Task<IActionResult> Edit(long id, [Bind("Id,Name,Surname")] Owner owner, CancellationToken cancellationToken)
         {
             if (id != owner.Id)
             {
@@ -97,7 +97,7 @@ namespace TransportWebApplication.Controllers
                 try
                 {
                     _context.Update(owner);
-                    await _context.SaveChangesAsync();
+                    await _context.SaveChangesAsync(cancellationToken);
                 }
                 catch (DbUpdateConcurrencyException)
                 {
@@ -116,7 +116,7 @@ namespace TransportWebApplication.Controllers
         }
 
         // GET: Owners/Delete/5
-        public async Task<IActionResult> Delete(long? id)
+        public async Task<IActionResult> Delete(long? id, CancellationToken cancellationToken)
         {
             if (id == null || _context.Owners == null)
             {
@@ -124,7 +124,7 @@ namespace TransportWebApplication.Controllers
             }
 
             var owner = await _context.Owners
-                .FirstOrDefaultAsync(m => m.Id == id);
+                .FirstOrDefaultAsync(m => m.Id == id, cancellationToken);
             if (owner == null)
             {
                 return NotFound();
@@ -136,25 +136,25 @@ namespace TransportWebApplication.Controllers
         // POST: Owners/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> DeleteConfirmed(long id)
+        public async Task<IActionResult> DeleteConfirmed(long id, CancellationToken cancellationToken)
         {
             if (_context.Owners == null)
             {
                 return Problem("Entity set 'TransportContext.Owners'  is null.");
             }
-            var owner = await _context.Owners.FindAsync(id);
+            var owner = await _context.Owners.FindAsync(id, cancellationToken);
             if (owner != null)
             {
                 _context.Owners.Remove(owner);
             }
             
-            await _context.SaveChangesAsync();
+            await _context.SaveChangesAsync(cancellationToken);
             return RedirectToAction(nameof(Index));
         }
 
         private bool OwnerExists(long id)
         {
-          return _context.Owners.Any(e => e.Id == id);
+            return _context.Owners.Any(e => e.Id == id);
         }
     }
 }

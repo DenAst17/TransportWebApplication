@@ -4,7 +4,7 @@
     ViewData["Title"] = "Додавання власника до авто";
 }
 
-<h1>Додавання власника до авто з кодом @ViewBag.AutoName</h1>
+<h1>Додавання власника до авто з кодом @(Model.Auto.Vin)</h1>
 
 <hr />
 <div class="row">
@@ -31,7 +31,7 @@
                 <span asp-validation-for="IncidentsInfo" class="text-danger"></span>
             </div>
 
-            <input type="hidden" value="@ViewBag.AutoId" name="AutoId" />
+            <input type="hidden" value="@(Model.Auto.Id)" name="AutoId" />
 
             <div class="form-group">
                 <input type="submit" value="Create" class="btn btn-primary" />

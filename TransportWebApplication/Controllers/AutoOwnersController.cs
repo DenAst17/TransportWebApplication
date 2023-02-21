@@ -19,7 +19,7 @@ namespace TransportWebApplication.Controllers
         }
 
         // GET: AutoOwners
-        public async Task<IActionResult> Index(int? autoId, string? autoName)
+        public async Task<IActionResult> Index(int? autoId, string? autoName, CancellationToken cancellationToken)
         {
             if (autoId == null)
             {
@@ -28,16 +28,16 @@ namespace TransportWebApplication.Controllers
             ViewBag.AutoId = autoId; // Just storing data to use it on view
             ViewBag.AutoName = autoName;
 
-            var autoOwners = _context.AutoOwners
+            var autoOwners = await _context.AutoOwners
                 .Where(ao => ao.AutoId == autoId)
                 .Include(ao => ao.Owner)
-                .ToList();
+                .ToListAsync(cancellationToken);
 
             return View(autoOwners);
         }
 
         // GET: AutoOwners/Details/5
-        public async Task<IActionResult> Details(long? id)
+        public async Task<IActionResult> Details(long? id, CancellationToken cancellationToken)
         {
             if (id == null || _context.AutoOwners == null)
             {
@@ -47,7 +47,8 @@ namespace TransportWebApplication.Controllers
             var autoOwner = await _context.AutoOwners
                 .Include(a => a.Auto)
                 .Include(a => a.Owner)
-                .FirstOrDefaultAsync(m => m.Id == id);
+                .FirstOrDefaultAsync(m => m.Id == id, cancellationToken);
+
             if (autoOwner == null)
             {
                 return NotFound();
@@ -57,14 +58,29 @@ namespace TransportWebApplication.Controllers
         }
 
         // GET: AutoOwners/Create
-        public IActionResult Create(int id, string name)
+        public async Task<IActionResult> Create(int id, CancellationToken cancellationToken)
         {
-            Console.WriteLine(id);
-            Console.WriteLine(name);
-            ViewBag.AutoId = id;
-            ViewBag.AutoName = name;
-            ViewData["OwnerId"] = new SelectList(_context.Owners, "Id", "Name");
-            return View();
+            /*Console.WriteLine(id);
+            Console.WriteLine(name);*/
+            var auto = await _context.Autos.FirstOrDefaultAsync(a => a.Id == id, cancellationToken);
+
+            if(auto is null)
+            {
+                return NotFound();
+            }
+
+            var owners = await _context.Owners.ToListAsync(cancellationToken);
+
+            ViewData["OwnerId"] = new SelectList(owners, "Id", "Name");
+            ViewData["Auto"] = auto;
+
+
+            var autoOwner = new AutoOwner
+            {
+                Auto = auto
+            };
+
+            return View(autoOwner);
         }
 
         // POST: AutoOwners/Create
@@ -72,27 +88,27 @@ namespace TransportWebApplication.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create(int AutoId, [Bind("OwnerId,StartDate,EndDate,IncidentsInfo")] AutoOwner autoOwner)
+        public async Task<IActionResult> Create(int AutoId, [Bind("OwnerId,StartDate,EndDate,IncidentsInfo")] AutoOwner autoOwner, CancellationToken cancellationToken)
         {
             autoOwner.AutoId = AutoId;
             if (ModelState.IsValid)
             {
-                _context.Add(autoOwner);
-                await _context.SaveChangesAsync();
+                await _context.AddAsync(autoOwner, cancellationToken);
+                await _context.SaveChangesAsync(cancellationToken);
                 return RedirectToAction("Index", "AutoOwners", new { autoId = AutoId, autoName = _context.Autos.Where(a => a.Id == AutoId).FirstOrDefault().Vin });
             }
             return RedirectToAction("Index", "AutoOwners", new { autoId = AutoId, autoName = _context.Autos.Where(a => a.Id == AutoId).FirstOrDefault().Vin });
         }
 
         // GET: AutoOwners/Edit/5
-        public async Task<IActionResult> Edit(long? id)
+        public async Task<IActionResult> Edit(long? id, CancellationToken cancellationToken)
         {
             if (id == null || _context.AutoOwners == null)
             {
                 return NotFound();
             }
 
-            var autoOwner = await _context.AutoOwners.FindAsync(id);
+            var autoOwner = await _context.AutoOwners.FindAsync(new object[] { id }, cancellationToken: cancellationToken);
             if (autoOwner == null)
             {
                 return NotFound();
@@ -107,7 +123,7 @@ namespace TransportWebApplication.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(long id, [Bind("Id,AutoId,OwnerId,StartDate,EndDate,IncidentsInfo")] AutoOwner autoOwner)
+        public async Task<IActionResult> Edit(long id, [Bind("Id,AutoId,OwnerId,StartDate,EndDate,IncidentsInfo")] AutoOwner autoOwner, CancellationToken cancellationToken)
         {
             if (id != autoOwner.Id)
             {
@@ -119,7 +135,7 @@ namespace TransportWebApplication.Controllers
                 try
                 {
                     _context.Update(autoOwner);
-                    await _context.SaveChangesAsync();
+                    await _context.SaveChangesAsync(cancellationToken);
                 }
                 catch (DbUpdateConcurrencyException)
                 {
@@ -140,7 +156,7 @@ namespace TransportWebApplication.Controllers
         }
 
         // GET: AutoOwners/Delete/5
-        public async Task<IActionResult> Delete(long? id)
+        public async Task<IActionResult> Delete(long? id, CancellationToken cancellationToken)
         {
             if (id == null || _context.AutoOwners == null)
             {
@@ -150,7 +166,7 @@ namespace TransportWebApplication.Controllers
             var autoOwner = await _context.AutoOwners
                 .Include(a => a.Auto)
                 .Include(a => a.Owner)
-                .FirstOrDefaultAsync(m => m.Id == id);
+                .FirstOrDefaultAsync(m => m.Id == id, cancellationToken);
             if (autoOwner == null)
             {
                 return NotFound();
@@ -162,13 +178,13 @@ namespace TransportWebApplication.Controllers
         // POST: AutoOwners/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> DeleteConfirmed(long id)
+        public async Task<IActionResult> DeleteConfirmed(long id, CancellationToken cancellationToken)
         {
             if (_context.AutoOwners == null)
             {
                 return Problem("Entity set 'TransportContext.AutoOwners'  is null.");
             }
-            var autoOwner = await _context.AutoOwners.FindAsync(id);
+            var autoOwner = await _context.AutoOwners.FindAsync(new object[] { id }, cancellationToken: cancellationToken);
             if (autoOwner != null)
             {
                 _context.AutoOwners.Remove(autoOwner);

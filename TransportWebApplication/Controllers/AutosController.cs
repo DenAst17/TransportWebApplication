@@ -19,7 +19,7 @@ namespace TransportWebApplication.Controllers
         }
 
         // GET: Autos
-        public async Task<IActionResult> Index(int? id, string? name)
+        public async Task<IActionResult> Index(int? id, string? name, CancellationToken cancellationToken)
         {
             if(id == null)
             {
@@ -30,11 +30,11 @@ namespace TransportWebApplication.Controllers
 
             var autosByModel = _context.Autos.Where(a => a.ModelId == id).Include(a => a.Model);
 
-            return View(await autosByModel.ToListAsync());
+            return View(await autosByModel.ToListAsync(cancellationToken));
         }
 
         // GET: Autos/Details/5
-        public async Task<IActionResult> Details(long? id)
+        public async Task<IActionResult> Details(long? id, CancellationToken cancellationToken)
         {
             if (id == null || _context.Autos == null)
             {
@@ -42,7 +42,7 @@ namespace TransportWebApplication.Controllers
             }
 
             var auto = await _context.Autos
-                .FirstOrDefaultAsync(a => a.Id == id);
+                .FirstOrDefaultAsync(a => a.Id == id, cancellationToken);
 
             if (auto == null)
             {
@@ -53,10 +53,10 @@ namespace TransportWebApplication.Controllers
         }
 
         // GET: Autos/Create
-        public IActionResult Create(int modelId)
+        public async Task<IActionResult> Create(int modelId, CancellationToken cancellationToken)
         {
             ViewBag.ModelId = modelId;
-            ViewBag.ModelName = _context.Models.Where(m => m.Id == modelId).FirstOrDefault().Name;
+            ViewBag.ModelName = (await _context.Models.Where(m => m.Id == modelId).FirstOrDefaultAsync(cancellationToken)).Name;
             return View();
         }
 
@@ -65,28 +65,27 @@ namespace TransportWebApplication.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create(int ModelId, [Bind("Id,Color,Vin,RegisterCode")] Auto auto)
+        public async Task<IActionResult> Create(int ModelId, [Bind("Id,Color,Vin,RegisterCode")] Auto auto, CancellationToken cancellationToken)
         {
             auto.ModelId = ModelId;
             if (ModelState.IsValid)
             {
-                _context.Add(auto);
-                await _context.SaveChangesAsync();
-                return RedirectToAction("Index", "Autos", new { id = ModelId, name = _context.Models.Where(m => m.Id == ModelId).FirstOrDefault().Name });
+                await _context.AddAsync(auto, cancellationToken);
+                await _context.SaveChangesAsync(cancellationToken);
             }
-            return RedirectToAction("Index", "Autos", new { id = ModelId, name = _context.Models.Where(m => m.Id == ModelId).FirstOrDefault().Name });
+            return RedirectToAction("Index", "Autos", new { id = ModelId, name = (await _context.Models.Where(m => m.Id == ModelId).FirstOrDefaultAsync(cancellationToken)).Name });
 
         }
-
-            // GET: Autos/Edit/5
-            public async Task<IActionResult> Edit(long? id)
+        
+        // GET: Autos/Edit/5
+        public async Task<IActionResult> Edit(long? id, CancellationToken cancellationToken)
         {
             if (id == null || _context.Autos == null)
             {
                 return NotFound();
             }
 
-            var auto = await _context.Autos.FindAsync(id);
+            var auto = await _context.Autos.FindAsync(new object[] { id }, cancellationToken);
             if (auto == null)
             {
                 return NotFound();
@@ -100,7 +99,7 @@ namespace TransportWebApplication.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(long id, [Bind("Id,ModelId,Color,Vin,RegisterCode")] Auto auto)
+        public async Task<IActionResult> Edit(long id, [Bind("Id,ModelId,Color,Vin,RegisterCode")] Auto auto, CancellationToken cancellationToken)
         {
             if (id != auto.Id)
             {
@@ -112,7 +111,7 @@ namespace TransportWebApplication.Controllers
                 try
                 {
                     _context.Update(auto);
-                    await _context.SaveChangesAsync();
+                    await _context.SaveChangesAsync(cancellationToken);
                 }
                 catch (DbUpdateConcurrencyException)
                 {
@@ -132,7 +131,7 @@ namespace TransportWebApplication.Controllers
         }
 
         // GET: Autos/Delete/5
-        public async Task<IActionResult> Delete(long? id)
+        public async Task<IActionResult> Delete(long? id, CancellationToken cancellationToken)
         {
             if (id == null || _context.Autos == null)
             {
@@ -141,7 +140,7 @@ namespace TransportWebApplication.Controllers
 
             var auto = await _context.Autos
                 .Include(a => a.Model)
-                .FirstOrDefaultAsync(m => m.Id == id);
+                .FirstOrDefaultAsync(m => m.Id == id, cancellationToken);
             if (auto == null)
             {
                 return NotFound();
@@ -153,19 +152,19 @@ namespace TransportWebApplication.Controllers
         // POST: Autos/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> DeleteConfirmed(long id)
+        public async Task<IActionResult> DeleteConfirmed(long id, CancellationToken cancellationToken)
         {
             if (_context.Autos == null)
             {
                 return Problem("Entity set 'TransportContext.Autos'  is null.");
             }
-            var auto = await _context.Autos.FindAsync(id);
+            var auto = await _context.Autos.FindAsync(new object[] { id }, cancellationToken);
             if (auto != null)
             {
                 _context.Autos.Remove(auto);
             }
             
-            await _context.SaveChangesAsync();
+            await _context.SaveChangesAsync(cancellationToken);
             return RedirectToAction(nameof(Index));
         }
 
