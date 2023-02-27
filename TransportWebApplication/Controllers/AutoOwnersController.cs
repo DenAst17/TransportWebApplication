@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using TransportWebApplication.Models;
+using TransportWebApplication.Services;
 
 namespace TransportWebApplication.Controllers
 {
@@ -91,11 +92,24 @@ namespace TransportWebApplication.Controllers
         public async Task<IActionResult> Create(int AutoId, [Bind("OwnerId,StartDate,EndDate,IncidentsInfo")] AutoOwner autoOwner, CancellationToken cancellationToken)
         {
             autoOwner.AutoId = AutoId;
-            if (ModelState.IsValid)
+
+            var isValidDate = AutoOwnersDateValidationService.IsValid(autoOwner);
+            var isValidPlacement = await AutoOwnersDateValidationService.IsValidPlacement(autoOwner, _context);
+
+            if(!isValidDate || !isValidPlacement)
+            {
+                var auto = await _context.Autos.FirstOrDefaultAsync(a => a.Id == AutoId, cancellationToken);
+                var owners = await _context.Owners.ToListAsync(cancellationToken);
+
+                ViewData["OwnerId"] = new SelectList(owners, "Id", "Name");
+
+                autoOwner.Auto = auto;
+                return View(autoOwner);
+            }
+            else if (ModelState.IsValid)
             {
                 await _context.AddAsync(autoOwner, cancellationToken);
                 await _context.SaveChangesAsync(cancellationToken);
-                return RedirectToAction("Index", "AutoOwners", new { autoId = AutoId, autoName = _context.Autos.Where(a => a.Id == AutoId).FirstOrDefault().Vin });
             }
             return RedirectToAction("Index", "AutoOwners", new { autoId = AutoId, autoName = _context.Autos.Where(a => a.Id == AutoId).FirstOrDefault().Vin });
         }
@@ -190,7 +204,7 @@ namespace TransportWebApplication.Controllers
                 _context.AutoOwners.Remove(autoOwner);
             }
             
-            await _context.SaveChangesAsync();
+            await _context.SaveChangesAsync(cancellationToken);
             return RedirectToAction(nameof(Index));
         }
 

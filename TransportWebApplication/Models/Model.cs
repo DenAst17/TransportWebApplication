@@ -6,6 +6,7 @@ namespace TransportWebApplication.Models;
 
 public partial class Model
 {
+
     public long Id { get; set; }
 
     [Required(ErrorMessage = "Поле не повинно бути порожнім")]
