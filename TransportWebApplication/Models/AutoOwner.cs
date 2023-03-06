@@ -15,14 +15,13 @@ public partial class AutoOwner
     /*[Required(ErrorMessage = "Поле не повинно бути порожнім")]
     [Display(Name = "Початок")]*/
     public DateTime StartDate { get; set; }
-
-    /*[Required(ErrorMessage = "Поле не повинно бути порожнім")]
-    [Display(Name = "Кінець")]*/
-    public DateTime EndDate { get; set; }
+    public DateTime? EndDate { get; set; } = null!;
 
     /*[Required(ErrorMessage = "Поле не повинно бути порожнім")]
     [Display(Name = "Інциденти")]*/
     public string IncidentsInfo { get; set; } = null!;
+
+    public bool IsFinite { get; set; } = false;
 
     public virtual Auto Auto { get; set; } = null!;
 

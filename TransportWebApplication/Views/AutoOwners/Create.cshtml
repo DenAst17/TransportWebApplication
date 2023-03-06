@@ -21,14 +21,14 @@
                 <span asp-validation-for="StartDate" class="text-danger"></span>
             </div>
             <div class="form-group">
-                <label asp-for="EndDate" class="control-label"></label>
-                <input asp-for="EndDate" class="form-control" />
-                <span asp-validation-for="EndDate" class="text-danger"></span>
-            </div>
-            <div class="form-group">
                 <label asp-for="IncidentsInfo" class="control-label"></label>
                 <input asp-for="IncidentsInfo" class="form-control" />
                 <span asp-validation-for="IncidentsInfo" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="IsFinite" class="control-label"></label>
+                <input type = "checkbox" asp-for="IsFinite" />
+                <span asp-validation-for="IsFinite" class="text-danger"></span>
             </div>
 
             <input type="hidden" value="@(Model.Auto.Id)" name="AutoId" />

@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
+using TransportWebApplication.Exceptions;
 using TransportWebApplication.Models;
 using TransportWebApplication.Services;
 
@@ -89,14 +90,17 @@ namespace TransportWebApplication.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create(int AutoId, [Bind("OwnerId,StartDate,EndDate,IncidentsInfo")] AutoOwner autoOwner, CancellationToken cancellationToken)
+        public async Task<IActionResult> Create(int AutoId, [Bind("OwnerId,StartDate,EndDate,IncidentsInfo,IsFinite")] AutoOwner autoOwner, CancellationToken cancellationToken)
         {
             autoOwner.AutoId = AutoId;
 
-            var isValidDate = AutoOwnersDateValidationService.IsValid(autoOwner);
-            var isValidPlacement = await AutoOwnersDateValidationService.IsValidPlacement(autoOwner, _context);
+            OwnershipService ownershipService = new(_context);
 
-            if(!isValidDate || !isValidPlacement)
+            try
+            {
+                await ownershipService.CreateOwnership(autoOwner, cancellationToken);
+            }
+            catch (OwnershipException)
             {
                 var auto = await _context.Autos.FirstOrDefaultAsync(a => a.Id == AutoId, cancellationToken);
                 var owners = await _context.Owners.ToListAsync(cancellationToken);
@@ -106,11 +110,7 @@ namespace TransportWebApplication.Controllers
                 autoOwner.Auto = auto;
                 return View(autoOwner);
             }
-            else if (ModelState.IsValid)
-            {
-                await _context.AddAsync(autoOwner, cancellationToken);
-                await _context.SaveChangesAsync(cancellationToken);
-            }
+
             return RedirectToAction("Index", "AutoOwners", new { autoId = AutoId, autoName = _context.Autos.Where(a => a.Id == AutoId).FirstOrDefault().Vin });
         }
 
