@@ -23,8 +23,7 @@ public partial class Auto
     public string RegisterCode { get; set; } = null!;
 
     public virtual ICollection<AutoOwner> AutoOwners { get; } = new List<AutoOwner>();
-
-    [Required(ErrorMessage = "Поле не повинно бути порожнім")]
+    
     [Display(Name = "Модель")]
     public virtual Model Model { get; set; } = null!;
 }

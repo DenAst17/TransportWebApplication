@@ -13,7 +13,7 @@ public partial class AutoOwner
     public long OwnerId { get; set; }
 
     /*[Required(ErrorMessage = "Поле не повинно бути порожнім")]
-    [Display(Name = "Початок")]*/
+    [Display(Name = "Дата передачі")]*/
     public DateTime StartDate { get; set; }
     public DateTime? EndDate { get; set; } = null!;
 

@@ -21,7 +21,7 @@ namespace TransportWebApplication.Controllers
         // GET: Autos
         public async Task<IActionResult> Index(int? id, string? name, CancellationToken cancellationToken)
         {
-            if(id == null)
+            if(id == null || name == null)
             {
                 return RedirectToAction("Index", "Models");
             }

@@ -12,21 +12,21 @@
         <form asp-action="Create">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
             <div class="form-group">
-                <label asp-for="OwnerId" class="control-label">Owner name</label>
+                <label asp-for="OwnerId" class="control-label">Власник</label>
                 <select asp-for="OwnerId" class ="form-control" asp-items="ViewBag.OwnerId"></select>
             </div>
             <div class="form-group">
-                <label asp-for="StartDate" class="control-label"></label>
+                <label asp-for="StartDate" class="control-label">Дата передачі власності</label>
                 <input asp-for="StartDate" class="form-control" />
                 <span asp-validation-for="StartDate" class="text-danger"></span>
             </div>
             <div class="form-group">
-                <label asp-for="IncidentsInfo" class="control-label"></label>
+                <label asp-for="IncidentsInfo" class="control-label">Інциденти</label>
                 <input asp-for="IncidentsInfo" class="form-control" />
                 <span asp-validation-for="IncidentsInfo" class="text-danger"></span>
             </div>
             <div class="form-group">
-                <label asp-for="IsFinite" class="control-label"></label>
+                <label asp-for="IsFinite" class="control-label">Кінцева власність</label>
                 <input type = "checkbox" asp-for="IsFinite" />
                 <span asp-validation-for="IsFinite" class="text-danger"></span>
             </div>
